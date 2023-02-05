@@ -1,0 +1,70 @@
+version: "3"
+services:
+
+  gitlab-ce:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab-ce
+    restart: always
+    volumes:
+      - $GITLAB_CONFIG:/etc/gitlab
+      - $GITLAB_LOGS:/var/log/gitlab
+      - $GITLAB_DATA:/var/opt/gitlab
+
+    ports:
+      - "$GITLAB_HTTP_PORT:80"
+      - "$GITLAB_HTTPS_PORT:443"
+      - "$GITLAB_SSH_PORT:22"
+
+    environment:
+      GITLAB_SSH_PORT: $GITLAB_SSH_PORT
+      GITLAB_PORT: $GITLAB_HTTP_PORT
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://$GITLAB_HOST:$GITLAB_HTTP_PORT'
+        gitlab_rails['gitlab_shell_ssh_port'] = $GITLAB_SSH_PORT
+        gitlab_rails['time_zone'] = 'Europe/Berlin'
+        gitlab_rails['gitlab_email_from'] = 'gitlab@$GITLAB_HOST'
+        gitlab_rails['gitlab_email_display_name'] = 'GitLab'
+        gitlab_rails['gitlab_email_reply_to'] = 'gitlab@$GITLAB_HOST'
+        gitlab_rails['smtp_enable'] = true
+        gitlab_rails['smtp_address'] = "$SMTP_ADDRESS"
+        gitlab_rails['smtp_port'] = 587
+        gitlab_rails['smtp_user_name'] = "$SMTP_USER"
+        gitlab_rails['smtp_password'] = "$SMTP_PASSWORD"
+        gitlab_rails['smtp_domain'] = "$SMTP_DOMAIN"
+        gitlab_rails['smtp_authentication'] = "$SMTP_AUTHENTICATION"
+        gitlab_rails['smtp_enable_starttls_auto'] = true
+        gitlab_rails['smtp_tls'] = false
+        gitlab_rails['smtp_openssl_verify_mode'] = 'peer'
+
+
+        nginx['listen_port'] = $GITLAB_HTTP_PORT
+        nginx['listen_https'] = false
+        nginx['proxy_set_headers'] = {
+          "X-Forwarded-Proto" => "http",
+          "X-Forwarded-Ssl" => "off"
+        }
+        gitlab_rails['lfs_enabled'] = true
+        gitlab_rails['lfs_storage_path'] = "/var/opt/gitlab/gitlab-rails/shared/lfs-objects"
+        gitlab_rails['lfs_object_directory'] = "/var/opt/gitlab/gitlab-rails/shared/lfs-objects"
+        gitlab_rails['lfs_storage_redirect'] = true
+
+    networks:
+      myNetwork2:
+        ipv4_address: $GITLAB_IPV4
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-runner
+    restart: always
+    volumes:
+      - $GITLAB_RUNNER_CONFIG:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - gitlab-ce
+    networks:
+      myNetwork2:
+        ipv4_address: $GITLAB_RUNNER_IPV4
+
+networks:
+  myNetwork2:
+    external: true
