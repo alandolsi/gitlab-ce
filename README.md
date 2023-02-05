@@ -78,7 +78,35 @@ $ cd gitlab-ce
 # start docker-compose
 $ docker-compose up -d
 
-# The server will initialize in the <http://localhost:3000>
+# .env file
+# The ip address to listen on
+GITLAB_HOST=192.168.*.*
+GITLAB_IPV4=192.168.*.*
+GITLAB_RUNNER_IPV4=192.168.*.*
+
+# The port to listen on
+GITLAB_SSH_PORT=6022
+GITLAB_HTTP_PORT=6080
+GITLAB_HTTPS_PORT=6443
+
+# Synology NAS Volume
+VOLUME=/volume1
+GITLAB_HOME=$VOLUME/docker/gitlab-ce
+GITLAB_CONFIG=$GITLAB_HOME/config
+GITLAB_DATA=$GITLAB_HOME/data
+GITLAB_LOGS=$GITLAB_HOME/logs
+GITLAB_RUNNER_HOME=$GITLAB_HOME/gitlab-runner
+GITLAB_RUNNER_CONFIG=$GITLAB_RUNNER_HOME/config
+
+# smtp settings
+SMTP_ENABLED=true
+SMTP_PORT=587
+SMTP_ADDRESS=mail.***.de
+SMTP_USER = webmaster@***.de
+SMTP_PASSWORD = ***
+SMTP_DOMAIN = ***.de
+SMTP_AUTHENTICATION = login
+
 ```
 
 ## :memo: License ##
