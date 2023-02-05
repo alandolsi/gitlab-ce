@@ -46,23 +46,21 @@
 
 ## :dart: About ##
 
-Describe your project
+This project is a Gitlab Community Edition (CE) with Docker Compose.
 
 ## :sparkles: Features ##
 
-:heavy_check_mark: Feature 1;\
-:heavy_check_mark: Feature 2;\
-:heavy_check_mark: Feature 3;
+:heavy_check_mark: Gitlab Comunnity Edition;\
+:heavy_check_mark:  Gitlab Runner with Docker Compose;
 
 ## :rocket: Technologies ##
 
 The following tools were used in this project:
 
-- [Expo](https://expo.io/)
-- [Node.js](https://nodejs.org/en/)
-- [React](https://pt-br.reactjs.org/)
-- [React Native](https://reactnative.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+- [Gitlab](https://gitlab.com/)
+- [Gitlab Runner](https://docs.gitlab.com/runner/)
 
 ## :white_check_mark: Requirements ##
 
@@ -77,11 +75,8 @@ $ git clone https://github.com/alandolsi/gitlab-ce
 # Access
 $ cd gitlab-ce
 
-# Install dependencies
-$ yarn
-
-# Run the project
-$ yarn start
+# start docker-compose
+$ docker-compose up -d
 
 # The server will initialize in the <http://localhost:3000>
 ```
